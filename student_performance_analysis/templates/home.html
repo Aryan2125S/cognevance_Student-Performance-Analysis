@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Overview{% endblock %}
+{% block subtitle %}Student Performance Analysis Internship Project (Level 1){% endblock %}
+
+{% block content %}
+<!-- Welcome Banner -->
+<div class="welcome-banner">
+    <div class="banner-text">
+        <h3>Welcome to the Student Performance Analytics Dashboard</h3>
+        <p>This project analyzes academic grades and attendance trends for secondary school students using the UCI Machine Learning Repository dataset. It evaluates how social, demographic, and educational support parameters affect final scores, with a core focus on the relationship between attendance and academic success.</p>
+    </div>
+    <div class="banner-badge">
+        <span class="badge level-badge">Level 1 Project</span>
+        <span class="badge framework-badge">Flask + Pandas</span>
+    </div>
+</div>
+
+<!-- KPI Cards Grid -->
+<div class="kpi-grid">
+    <div class="kpi-card primary-border">
+        <div class="kpi-icon-container bg-primary-light">
+            <i class="fa-solid fa-users text-primary"></i>
+        </div>
+        <div class="kpi-content">
+            <span class="kpi-label">Total Student Sample</span>
+            <h3 class="kpi-value">{{ stats.total_students }}</h3>
+            <span class="kpi-meta"><i class="fa-solid fa-check-double text-success"></i> Raw dataset size</span>
+        </div>
+    </div>
+    
+    <div class="kpi-card success-border">
+        <div class="kpi-icon-container bg-success-light">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+        </div>
+        <div class="kpi-content">
+            <span class="kpi-label">Active Exam Takers</span>
+            <h3 class="kpi-value">{{ stats.active_students }}</h3>
+            <span class="kpi-meta"><i class="fa-solid fa-arrow-trend-up text-success"></i> {{ ((stats.active_students / stats.total_students) * 100)|round(1) }}% exam participation</span>
+        </div>
+    </div>
+    
+    <div class="kpi-card info-border">
+        <div class="kpi-icon-container bg-info-light">
+            <i class="fa-solid fa-clipboard-user text-info"></i>
+        </div>
+        <div class="kpi-content">
+            <span class="kpi-label">Average Attendance</span>
+            <h3 class="kpi-value">{{ stats.mean_attendance }}%</h3>
+            <span class="kpi-meta"><i class="fa-solid fa-clock text-info"></i> Median absences: {{ stats.median_attendance }} days</span>
+        </div>
+    </div>
+    
+    <div class="kpi-card warning-border">
+        <div class="kpi-icon-container bg-warning-light">
+            <i class="fa-solid fa-circle-exclamation text-warning"></i>
+        </div>
+        <div class="kpi-content">
+            <span class="kpi-label">Unexcused Absences</span>
+            <h3 class="kpi-value">{{ stats.absent_students }}</h3>
+            <span class="kpi-meta"><i class="fa-solid fa-user-minus text-warning"></i> Missed final exam (dropout)</span>
+        </div>
+    </div>
+</div>
+
+<!-- Project Context and Details -->
+<div class="info-layout">
+    <!-- Left Column: Objectives -->
+    <div class="info-card">
+        <div class="card-header">
+            <h4><i class="fa-solid fa-bullseye"></i> Project Objectives & Scope</h4>
+        </div>
+        <div class="card-body">
+            <p>As part of the 2nd-year CS internship requirement, this analysis project operates under strict scope limits:</p>
+            <ul class="styled-list">
+                <li><i class="fa-solid fa-circle-check text-success"></i> <strong>Data Cleaning:</strong> Differentiating between low performers and students who missed their final exam.</li>
+                <li><i class="fa-solid fa-circle-check text-success"></i> <strong>Correlation Finding:</strong> Quantifying the impact of school attendance on grade outcomes.</li>
+                <li><i class="fa-solid fa-circle-check text-success"></i> <strong>Visual Reporting:</strong> Rendering interactive dashboard distribution, pie, bar, and scatter charts.</li>
+                <li><i class="fa-solid fa-circle-xmark text-danger"></i> <strong>Strict Exclusions:</strong> No Machine Learning, No Deep Learning, No SQL databases, No Power BI, and No Authentication.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right Column: Variables Guide -->
+    <div class="info-card">
+        <div class="card-header">
+            <h4><i class="fa-solid fa-circle-info"></i> Key Dataset Columns</h4>
+        </div>
+        <div class="card-body">
+            <table class="simple-table">
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>G1, G2</code></td>
+                        <td>Numerical</td>
+                        <td>First & second period exam scores (0-20 scale)</td>
+                    </tr>
+                    <tr>
+                        <td><code>G3</code></td>
+                        <td>Numerical</td>
+                        <td>Final exam score (0-20 scale) - Target metric</td>
+                    </tr>
+                    <tr>
+                        <td><code>absences</code></td>
+                        <td>Numerical</td>
+                        <td>Yearly absences. Converted to Attendance %</td>
+                    </tr>
+                    <tr>
+                        <td><code>studytime</code></td>
+                        <td>Categorical</td>
+                        <td>Weekly study time (mapped: &lt;2, 2-5, 5-10, &gt;10 hrs)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Medu / Fedu</code></td>
+                        <td>Categorical</td>
+                        <td>Mother's / Father's education level achieved</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

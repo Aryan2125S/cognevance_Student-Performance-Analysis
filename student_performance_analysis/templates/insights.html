@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Key Insights & Actionable Recommendations{% endblock %}
+{% block subtitle %}Data-driven decisions to improve student outcomes and attendance rates{% endblock %}
+
+{% block content %}
+<div class="insights-layout">
+    <!-- Analytical Findings Panel -->
+    <div class="info-card">
+        <div class="card-header">
+            <h4><i class="fa-solid fa-brain"></i> Major Analytical Findings</h4>
+        </div>
+        <div class="card-body">
+            <div class="findings-list">
+                <!-- Finding 1 -->
+                <div class="finding-item">
+                    <div class="finding-num bg-primary-light text-primary">1</div>
+                    <div class="finding-details">
+                        <h5>Attendance is the Foundation of Performance</h5>
+                        <p>Our analysis proves a weak-to-moderate positive correlation (<strong>r = {{ analysis.correlation.corr_attendance_g3_active }}</strong>) between attendance and grades. Students with "Good" attendance (&ge;90%) achieve an average final score of <strong>{{ (analysis.attendance_groups|selectattr("attendance_category", "equalto", "Good (>=90%)")|first).average_final_grade }} / 20</strong>, whereas those with "Poor" attendance (&lt;75%) drop to <strong>{{ (analysis.attendance_groups|selectattr("attendance_category", "equalto", "Poor (<75%)")|first).average_final_grade }} / 20</strong>. This represents a 25% performance penalty for chronic absenteeism.</p>
+                    </div>
+                </div>
+
+                <!-- Finding 2 -->
+                <div class="finding-item">
+                    <div class="finding-num bg-success-light text-success">2</div>
+                    <div class="finding-details">
+                        <h5>Incremental Study Habits yield Exponential Rewards</h5>
+                        <p>A step-wise growth exists between study hours and academic outcomes. Students studying &lt;2 hours per week score <strong>9.25 / 20</strong> on average, while students studying &gt;10 hours achieve <strong>11.26 / 20</strong>. Moving students from the low-study bracket (&lt;2 hours) to the average bracket (2-5 hours) yields the highest immediate return on grade improvement (+0.9 points).</p>
+                    </div>
+                </div>
+
+                <!-- Finding 3 -->
+                <div class="finding-item">
+                    <div class="finding-num bg-violet-light text-violet">3</div>
+                    <div class="finding-details">
+                        <h5>School Support is Reactive, Not Proactive</h5>
+                        <p>Interestingly, students receiving extra educational support (<code>schoolsup = 'yes'</code>) have a lower grade average (<strong>{{ analysis.school_support.yes.average_final_grade }} / 20</strong>) compared to those who do not (<strong>{{ analysis.school_support.no.average_final_grade }} / 20</strong>). This indicates that school support is currently *reactive* (assigned to students who are already failing) rather than *proactive* (preventive tutoring before grades fall).</p>
+                    </div>
+                </div>
+
+                <!-- Finding 4 -->
+                <div class="finding-item">
+                    <div class="finding-num bg-info-light text-info">4</div>
+                    <div class="finding-details">
+                        <h5>Household Education Background Influences Baselines</h5>
+                        <p>Students whose mothers have higher education levels score higher on average (<strong>11.76 / 20</strong>) than students whose mothers have no formal education (<strong>9.60 / 20</strong>). This highlights the positive impact of household learning environments and parental guidance on academic performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations Panel -->
+    <div class="info-card">
+        <div class="card-header">
+            <h4><i class="fa-solid fa-rectangle-list"></i> Actionable Recommendations</h4>
+        </div>
+        <div class="card-body">
+            <div class="recs-container">
+                <!-- Rec 1 -->
+                <div class="rec-item">
+                    <div class="rec-icon text-success"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="rec-text">
+                        <h5>Implement an Attendance Early Warning System (EWS)</h5>
+                        <p>School administrators should set up automated tracking systems. If a student's attendance rate falls below <strong>90%</strong>, the system should trigger an immediate notification to counselors. Intervening before attendance falls below 75% can prevent student performance from dropping below passing thresholds.</p>
+                    </div>
+                </div>
+
+                <!-- Rec 2 -->
+                <div class="rec-item">
+                    <div class="rec-icon text-success"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="rec-text">
+                        <h5>Re-structure Support Programs to be Proactive</h5>
+                        <p>Shift the extra educational support from a "remedial system for failing students" to a "preventative study program." Group sessions should be open to all students, with targeted recommendations based on early quiz scores (G1) rather than waiting for midterm grades (G2) or end-of-year grades (G3).</p>
+                    </div>
+                </div>
+
+                <!-- Rec 3 -->
+                <div class="rec-item">
+                    <div class="rec-icon text-success"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="rec-text">
+                        <h5>Encourage "Study Smart" Workshops</h5>
+                        <p>Since the jump from &lt;2 hours to 2-5 hours of weekly study shows the largest grade increase, schools should host workshops teaching basic time management and active study techniques (like the Pomodoro technique) to help low-study students build sustainable learning habits.</p>
+                    </div>
+                </div>
+
+                <!-- Rec 4 -->
+                <div class="rec-item">
+                    <div class="rec-icon text-success"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="rec-text">
+                        <h5>Parent-Teacher Academic Alignment</h5>
+                        <p>Given the strong relationship between parental education and student grades, schools should organize parenting workshops or regular progress reviews to help parents from diverse educational backgrounds support their children's homework and study schedules effectively.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

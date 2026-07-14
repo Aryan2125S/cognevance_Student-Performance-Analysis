@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Dataset Preview{% endblock %}
+{% block subtitle %}Explore the student record metrics (showing {{ start_idx }} to {{ end_idx }} of {{ total_rows }} records){% endblock %}
+
+{% block content %}
+<div class="preview-container">
+    <!-- Controls Block -->
+    <div class="table-controls-card">
+        <div class="tabs-container">
+            <a href="{{ url_for('dataset_preview', type='cleaned', page=1) }}" class="tab-btn {% if data_type == 'cleaned' %}active{% endif %}">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Cleaned & Processed Data
+            </a>
+            <a href="{{ url_for('dataset_preview', type='raw', page=1) }}" class="tab-btn {% if data_type == 'raw' %}active{% endif %}">
+                <i class="fa-solid fa-file-csv"></i> Original Raw Data (Semicolon Delimited)
+            </a>
+        </div>
+        
+        <div class="pagination-info">
+            <span class="info-text">Showing records <strong>{{ start_idx }}-{{ end_idx }}</strong> of <strong>{{ total_rows }}</strong></span>
+        </div>
+    </div>
+
+    <!-- Table Wrapper with horizontal scrolling -->
+    <div class="table-card">
+        <div class="table-scroll-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="sticky-col">#</th>
+                        {% for col in columns %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in records %}
+                    <tr>
+                        <td class="sticky-col font-semibold">{{ start_idx + loop.index0 }}</td>
+                        {% for col in columns %}
+                        <td>
+                            {% if col == 'status' %}
+                                <span class="badge {% if row[col] == 'Active' %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ row[col] }}
+                                </span>
+                            {% elif col == 'attendance_rate' %}
+                                <span class="font-semibold {% if row[col] >= 90 %}text-success{% elif row[col] >= 75 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ row[col] }}%
+                                </span>
+                            {% elif col in ['G1', 'G2', 'G3', 'average_grade'] %}
+                                <span class="font-semibold">{{ row[col] }}</span>
+                            {% else %}
+                                {{ row[col] }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls-card">
+        <div class="pagination-nav">
+            {% if current_page > 1 %}
+            <a href="{{ url_for('dataset_preview', type=data_type, page=current_page-1) }}" class="page-nav-btn">
+                <i class="fa-solid fa-chevron-left"></i> Previous
+            </a>
+            {% else %}
+            <span class="page-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i> Previous</span>
+            {% endif %}
+            
+            <div class="page-indicator">
+                Page <strong>{{ current_page }}</strong> of <strong>{{ total_pages }}</strong>
+            </div>
+            
+            {% if current_page < total_pages %}
+            <a href="{{ url_for('dataset_preview', type=data_type, page=current_page+1) }}" class="page-nav-btn">
+                Next <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            {% else %}
+            <span class="page-nav-btn disabled">Next <i class="fa-solid fa-chevron-right"></i></span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Statistical Visualizations{% endblock %}
+{% block subtitle %}Graphical representations of student distributions, attendance, and study habits{% endblock %}
+
+{% block content %}
+<div class="visualizations-grid">
+    <!-- Chart 1: Grade Distribution -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h5><i class="fa-solid fa-chart-bar"></i> Chart 1: Distribution of Final Grades</h5>
+            <span class="badge badge-primary">Histogram</span>
+        </div>
+        <div class="chart-body">
+            <img src="{{ url_for('static', filename='images/grade_distribution.png') }}" alt="Final Grade Distribution Histogram" class="dashboard-img">
+        </div>
+        <div class="chart-footer">
+            <p><strong>Observation:</strong> The distribution of grades for active students forms a classic bell-shaped curve (normal distribution), centered around 10-12 points on a 20-point scale. This indicates standard class grading parity, with few extreme low/high scorers.</p>
+        </div>
+    </div>
+
+    <!-- Chart 2: Attendance Distribution -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h5><i class="fa-solid fa-chart-pie"></i> Chart 2: Student Attendance Categories</h5>
+            <span class="badge badge-success">Pie Chart</span>
+        </div>
+        <div class="chart-body">
+            <img src="{{ url_for('static', filename='images/attendance_pie.png') }}" alt="Attendance Category Breakdown Pie Chart" class="dashboard-img">
+        </div>
+        <div class="chart-footer">
+            <p><strong>Observation:</strong> A large majority of students (over 70%) maintain good attendance (&ge; 90%). However, there is a vulnerable subset (~10%) with poor attendance (< 75%), representing a high academic failure risk group requiring intervention.</p>
+        </div>
+    </div>
+
+    <!-- Chart 3: Study Time vs Grades -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h5><i class="fa-solid fa-chart-simple"></i> Chart 3: Performance vs. Weekly Study Hours</h5>
+            <span class="badge badge-violet">Bar Chart</span>
+        </div>
+        <div class="chart-body">
+            <img src="{{ url_for('static', filename='images/study_vs_grade.png') }}" alt="Study Time vs Average Grade Bar Chart" class="dashboard-img">
+        </div>
+        <div class="chart-footer">
+            <p><strong>Observation:</strong> There is a clear step-wise increase in the average final grade corresponding to study time. Students studying over 10 hours weekly score over 2.5 points higher on average than those studying less than 2 hours.</p>
+        </div>
+    </div>
+
+    <!-- Chart 4: Attendance vs Grades -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h5><i class="fa-solid fa-chart-line"></i> Chart 4: Attendance Rate vs. Final Grade</h5>
+            <span class="badge badge-secondary">Scatter Plot</span>
+        </div>
+        <div class="chart-body">
+            <img src="{{ url_for('static', filename='images/attendance_vs_grade.png') }}" alt="Attendance vs Final Grade Scatter Plot" class="dashboard-img">
+        </div>
+        <div class="chart-footer">
+            <p><strong>Observation:</strong> The scatter plot displays individual student scores against attendance rates. The trend line displays a positive slope for active exam takers, demonstrating that higher attendance rates are linked to stronger grade performance.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

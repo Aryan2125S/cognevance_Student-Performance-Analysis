@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Analytics Dashboard</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-graduation-cap brand-icon"></i>
+                <div class="brand-text">
+                    <h1>EduMetrics</h1>
+                    <span>Internship Project</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('home') }}" class="nav-item {% if page == 'home' %}active{% endif %}">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{{ url_for('dataset_preview') }}" class="nav-item {% if page == 'preview' %}active{% endif %}">
+                    <i class="fa-solid fa-table-cells"></i>
+                    <span>Dataset Preview</span>
+                </a>
+                <a href="{{ url_for('cleaning_summary') }}" class="nav-item {% if page == 'cleaning' %}active{% endif %}">
+                    <i class="fa-solid fa-broom"></i>
+                    <span>Data Cleaning</span>
+                </a>
+                <a href="{{ url_for('data_analysis') }}" class="nav-item {% if page == 'analysis' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Data Analysis</span>
+                </a>
+                <a href="{{ url_for('visualizations') }}" class="nav-item {% if page == 'visualizations' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Visualizations</span>
+                </a>
+                <a href="{{ url_for('insights') }}" class="nav-item {% if page == 'insights' %}active{% endif %}">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>Insights & Recs</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div class="user-info">
+                        <p class="user-name">AI Student</p>
+                        <p class="user-role">Intern • 2nd Year CS</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h2>{% block title %}{% endblock %}</h2>
+                    <p class="subtitle">{% block subtitle %}{% endblock %}</p>
+                </div>
+                <div class="header-actions">
+                    <div class="date-badge">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span id="current-date">July 2026</span>
+                    </div>
+                    <button class="theme-toggle-btn" id="theme-toggle">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <section class="content-body">
+                {% block content %}
+                {% endblock %}
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <p>&copy; 2026 EduMetrics. Student Performance Analysis Project. Developed by a 2nd-Year CS (AI) Student.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

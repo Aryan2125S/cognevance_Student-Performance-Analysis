@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Data Analysis Summary{% endblock %}
+{% block subtitle %}Deep dive into statistical trends, academic correlations, and student demographics{% endblock %}
+
+{% block content %}
+<div class="analysis-layout">
+    <!-- Descriptive Stats Table -->
+    <div class="info-card card-full">
+        <div class="card-header">
+            <h4><i class="fa-solid fa-calculator"></i> Key Class Metrics & Descriptive Statistics</h4>
+        </div>
+        <div class="card-body">
+            <div class="stats-row">
+                <div class="stat-badge">
+                    <span class="badge-label">Class Size</span>
+                    <span class="badge-num">{{ analysis.overall.total_students }}</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="badge-label">Active Exam Takers</span>
+                    <span class="badge-num">{{ analysis.overall.active_students }}</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="badge-label">Mean Final Grade (All)</span>
+                    <span class="badge-num">{{ analysis.overall.mean_g3_all }} / 20</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="badge-label">Mean Final Grade (Active)</span>
+                    <span class="badge-num">{{ analysis.overall.mean_g3_active }} / 20</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="badge-label">Mean Attendance Rate</span>
+                    <span class="badge-num">{{ analysis.overall.mean_attendance }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Comparisons (Split Layout) -->
+    <div class="info-layout">
+        <!-- Attendance Category vs Grades -->
+        <div class="info-card">
+            <div class="card-header">
+                <h4><i class="fa-solid fa-clipboard-user"></i> Performance by Attendance Category</h4>
+            </div>
+            <div class="card-body">
+                <table class="simple-table">
+                    <thead>
+                        <tr>
+                            <th>Attendance Level</th>
+                            <th>Student Count</th>
+                            <th>Avg Attendance %</th>
+                            <th>Avg Final Grade (G3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in analysis.attendance_groups %}
+                        <tr>
+                            <td><strong>{{ row.attendance_category }}</strong></td>
+                            <td>{{ row.student_count }}</td>
+                            <td>{{ row.average_attendance }}%</td>
+                            <td><span class="highlight-val">{{ row.average_final_grade }} / 20</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p class="table-caption"><i class="fa-solid fa-circle-info"></i> Notice how final grades drop dramatically for students with Poor attendance (< 75%).</p>
+            </div>
+        </div>
+
+        <!-- Study Time vs Grades -->
+        <div class="info-card">
+            <div class="card-header">
+                <h4><i class="fa-solid fa-book-open"></i> Performance by Weekly Study Hours</h4>
+            </div>
+            <div class="card-body">
+                <table class="simple-table">
+                    <thead>
+                        <tr>
+                            <th>Study Hours</th>
+                            <th>Student Count</th>
+                            <th>Avg Final Grade (G3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in analysis.study_groups %}
+                        <tr>
+                            <td><strong>{{ row.hours_label }}</strong></td>
+                            <td>{{ row.student_count }}</td>
+                            <td><span class="highlight-val">{{ row.average_final_grade }} / 20</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p class="table-caption"><i class="fa-solid fa-circle-info"></i> Consistent increases in study time correlate directly with improved score outcomes.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Correlation Explanation Card -->
+    <div class="info-card card-full">
+        <div class="card-header">
+            <h4><i class="fa-solid fa-chart-line"></i> Attendance vs. Academic Score Correlation</h4>
+        </div>
+        <div class="card-body">
+            <div class="correlation-box-container">
+                <div class="corr-box">
+                    <span class="corr-title">Raw Correlation (All Students)</span>
+                    <span class="corr-val danger-color">{{ analysis.correlation.corr_attendance_g3_all }}</span>
+                    <span class="corr-desc">Includes G3 = 0 (absences)</span>
+                </div>
+                <div class="corr-box active-corr">
+                    <span class="corr-title">Cleaned Correlation (Active Students)</span>
+                    <span class="corr-val success-color">{{ analysis.correlation.corr_attendance_g3_active }}</span>
+                    <span class="corr-desc">Excludes G3 = 0 (anomalous absences)</span>
+                </div>
+            </div>
+            
+            <div class="analysis-explanation">
+                <h5>Analytical Interpretation:</h5>
+                <p>Initially, calculating the correlation across all students yielded a coefficient of <strong>{{ analysis.correlation.corr_attendance_g3_all }}</strong>, suggesting zero relationship. This occurred because a significant group of students had zero absences but scored 0 in G3 (due to skipping the exam), which skewed the linear regression model.</p>
+                <p>By filtering out exam absences and focusing on <strong>active exam-taking students</strong>, the correlation rises to <strong>{{ analysis.correlation.corr_attendance_g3_active }}</strong> (a weak-to-moderate positive linear correlation). This proves that attending class has a direct statistical connection to higher final scores. Every class attended contributes positively to learning reinforcement and grade outcomes.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra Factors (Parental Edu & Support) -->
+    <div class="info-layout">
+        <!-- Parental Education -->
+        <div class="info-card">
+            <div class="card-header">
+                <h4><i class="fa-solid fa-users-rectangle"></i> Mother's Education vs Student Performance</h4>
+            </div>
+            <div class="card-body">
+                <table class="simple-table">
+                    <thead>
+                        <tr>
+                            <th>Mother's Education Level</th>
+                            <th>Student Count</th>
+                            <th>Avg Final Grade (G3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for level, stats in analysis.mother_education.items() %}
+                        <tr>
+                            <td><strong>{{ level }}</strong></td>
+                            <td>{{ stats.student_count }}</td>
+                            <td><span class="highlight-val">{{ stats.average_final_grade }} / 20</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- School Support -->
+        <div class="info-card">
+            <div class="card-header">
+                <h4><i class="fa-solid fa-handshake-angle"></i> Impact of Extra School Support</h4>
+            </div>
+            <div class="card-body">
+                <table class="simple-table">
+                    <thead>
+                        <tr>
+                            <th>Extra Support?</th>
+                            <th>Student Count</th>
+                            <th>Avg Final Grade (G3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for support, stats in analysis.school_support.items() %}
+                        <tr>
+                            <td><strong>{% if support == 'yes' %}Yes, Supported{% else %}No Support{% endif %}</strong></td>
+                            <td>{{ stats.student_count }}</td>
+                            <td><span class="highlight-val">{{ stats.average_final_grade }} / 20</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p class="table-caption"><i class="fa-solid fa-circle-info"></i> Students receiving school support (tutoring/remedial) often start with lower baseline skills, explaining their lower averages.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

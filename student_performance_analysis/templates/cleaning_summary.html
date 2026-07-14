@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Data Cleaning & Preprocessing{% endblock %}
+{% block subtitle %}Detailed log of dataset transformations, feature engineering, and anomalies resolved{% endblock %}
+
+{% block content %}
+<div class="cleaning-layout">
+    <!-- Summary Cards -->
+    <div class="cleaning-summary-cards">
+        <div class="summary-card">
+            <div class="card-icon"><i class="fa-solid fa-database text-primary"></i></div>
+            <div class="card-text">
+                <h5>Raw Record Count</h5>
+                <h3>{{ log.raw_row_count }}</h3>
+                <p>Semicolon delimited text from UCI repository</p>
+            </div>
+        </div>
+        
+        <div class="summary-card">
+            <div class="card-icon"><i class="fa-solid fa-shield-halved text-success"></i></div>
+            <div class="card-text">
+                <h5>Missing Cells Handled</h5>
+                <h3>{{ log.missing_values_handled }}</h3>
+                <p>No null values requiring imputation in raw data</p>
+            </div>
+        </div>
+        
+        <div class="summary-card">
+            <div class="card-icon"><i class="fa-solid fa-user-slash text-danger"></i></div>
+            <div class="card-text">
+                <h5>Exam Absences Flagged</h5>
+                <h3>{{ log.absent_final_exam_count }}</h3>
+                <p>G3 = 0 (exam absences/dropouts) isolated</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Steps Timeline Details -->
+    <div class="info-card">
+        <div class="card-header">
+            <h4><i class="fa-solid fa-list-check"></i> Preprocessing & Transformation Timeline</h4>
+        </div>
+        <div class="card-body">
+            <div class="timeline">
+                <!-- Step 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-badge"><i class="fa-solid fa-file-import"></i></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h5>Step 1: Dataset Ingestion & Encoding Check</h5>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Loaded the raw <code>student-mat.csv</code> which uses semicolon (<code>;</code>) as a delimiter. Verified data integrity and confirmed that all 395 rows and 33 variables were read successfully. Running check on missing values revealed 0 missing values, confirming the high quality of the UCI dataset.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-badge"><i class="fa-solid fa-filter"></i></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h5>Step 2: Isolating Academic Dropouts / Exam Absences</h5>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Detected <strong>{{ log.absent_final_exam_count }} students</strong> with a final grade (G3) of exactly 0. However, further checks showed their first and second period grades (G1 and G2) were positive (averaging between 8 and 12). This indicates these students did not score a true 0, but rather missed the final exam or dropped out of the course.</p>
+                            <p class="highlight-box warning-box">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <strong>Critical Analytical Decision:</strong> Rather than deleting these records, we created a new column <code>status</code> set to "Absent/Dropout" for these records and "Active" for the rest. This prevents skewing statistical averages and correlation results, while preserving their demographic variables.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-badge"><i class="fa-solid fa-calculator"></i></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h5>Step 3: Feature Engineering & Column Mappings</h5>
+                        </div>
+                        <div class="timeline-body">
+                            <p>To prepare the dataset for descriptive analysis, we added several calculated and mapped attributes:</p>
+                            <table class="simple-table timeline-table">
+                                <thead>
+                                    <tr>
+                                        <th>New Column Name</th>
+                                        <th>Formula / Mapping Logic</th>
+                                        <th>Reason for Adding</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>attendance_rate</code></td>
+                                        <td><code>((180 - absences) / 180) * 100</code></td>
+                                        <td>Converts raw absence counts into intuitive percentage rates.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>attendance_category</code></td>
+                                        <td>Good (&ge;90%), Average (75-89%), Poor (&lt;75%)</td>
+                                        <td>Allows grouping of students into clear segments.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>average_grade</code></td>
+                                        <td><code>(G1 + G2 + G3) / 3</code></td>
+                                        <td>Represents the continuous learning trend score.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>study_hours</code></td>
+                                        <td>1 &rarr; "&lt;2 hours", 2 &rarr; "2-5 hours", etc.</td>
+                                        <td>Replaces numeric categorical codes with readable labels.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>mother_education</code></td>
+                                        <td>0 &rarr; "None", 4 &rarr; "Higher Education", etc.</td>
+                                        <td>Makes charts and summary tables intuitive to read.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-badge"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h5>Step 4: Clean Data Export</h5>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Exported the final preprocessed dataframe to <code>data/processed/student-cleaned.csv</code> as a comma-separated value file. This processed file is cache-loaded by the Flask application, reducing execution latency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
