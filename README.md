@@ -119,8 +119,7 @@ The application integrates a Multiple Linear Regression model built from scratch
 ---
 
 ## Live Streamlit Demo
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/)
-*(Link to deployed application on Streamlit Community Cloud)*
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cognevancestudent-performance-analysis-kst3ljfamigvxqgxyzikwr.streamlit.app/)
 
 ---
 
